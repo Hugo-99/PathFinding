@@ -84,24 +84,34 @@ public class CompetitionDijkstra {
         int[] distanceTo = new int[this.V];
         for(int i=0; i<distanceTo.length; i++) distanceTo[i] = Integer.MAX_VALUE;
 
-        PriorityQueue<Vertex> pq = new PriorityQueue<>();
-        Set<Edge> isVisited = new HashSet<>();
+        PriorityQueue<Vertex> pq = new PriorityQueue<>(this.V, new Vertex());
+        Set<Vertex> isVisited = new HashSet<>();
 
         distanceTo[srcV] = 0;
         pq.add(new Vertex(srcV,0));
         while(!pq.isEmpty()){
             Vertex tmp = pq.remove();
-            ArrayList<Edge> adjEdges = getAdjacent(tmp);
-            for(Edge e : adjEdges){
-
-            }
+            ArrayList<Vertex> adjVertices = getAdjacent(tmp);
+            isVisited.add(tmp);
+            released(tmp, adjVertices, isVisited, distanceTo, pq);
         }
 
-        return null;
+        return distanceTo;
     }
 
-    public void released(){
-
+    public void released(Vertex cur, ArrayList<Vertex> adjVertices, Set<Vertex> isVisited, int[] distanceTo, PriorityQueue<Vertex> pq){
+        int edgeCost = -1;
+        int newCost = -1;
+        for(Vertex v : adjVertices){
+            if(!isVisited.contains(v)){
+                edgeCost = v.cost;
+                newCost = distanceTo[cur.vertex] + edgeCost;
+                if(newCost<distanceTo[v.vertex]){
+                    distanceTo[v.vertex] = newCost;
+                }
+                pq.add(new Vertex(v.vertex,distanceTo[v.vertex]));
+            }
+        }
     }
 
     public void isValidVertex(int vertex){
@@ -110,11 +120,11 @@ public class CompetitionDijkstra {
         }
     }
 
-    public ArrayList<Edge> getAdjacent(Vertex V){
-        ArrayList<Edge> adjacent = new ArrayList<>();
+    public ArrayList<Vertex> getAdjacent(Vertex V){
+        ArrayList<Vertex> adjacent = new ArrayList<>();
         for(Edge e : this.edges){
             if(e.hasVertex(V.vertex)){
-                adjacent.add(e);
+                adjacent.add(new Vertex(e.other(V.vertex),e.getWeight()));
             }
         }
         return adjacent;
