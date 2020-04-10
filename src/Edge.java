@@ -2,28 +2,28 @@ public class Edge {
 
     private int src;
     private int des;
-    private int weight;
+    private double weight;
 
-    Edge(int src, int des, int weight){
+    Edge(int src, int des, double weight){
         this.src = src;
         this.des = des;
         this.weight = weight;
     }
 
-    public int getSrc() {
+    public int src() {
         return src;
     }
 
-    public int getDes() {
+    public int des() {
         return des;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public boolean hasVertex(int V){
-        if(this.src == V || this.des == V){
+    public boolean isSrc(int V){
+        if(this.src == V){
             return true;
         }
         return false;

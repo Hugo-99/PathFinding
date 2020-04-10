@@ -2,9 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Set;
 
 /*
  * A Contest to Meet (ACM) is a reality TV contest that sets three contestants at three random
@@ -36,37 +33,53 @@ public class CompetitionDijkstra {
     private int V;
     private int amount;
     private Edge[] edges;
+    public static final double KM_TO_M = 1000;
 
     CompetitionDijkstra (String filename, int sA, int sB, int sC){
-        this.sA = sA;
-        this.sB = sB;
-        this.sC = sC;
+        //if(sA>=50 && sB>=50 && sC>=50 && sA<=100 && sB<=100 && sC<=100 ) {
+            this.sA = sA;
+            this.sB = sB;
+            this.sC = sC;
 
-        Edge[] edges = null;
-        int index = 0;
+            Edge[] edges = null;
+            int index = 0;
 
-        BufferedReader rd;
-        int[] E = new int[3];
-        try{
-            rd = new BufferedReader(new FileReader(filename));
-            this.V = Integer.parseInt(rd.readLine());
-            this.amount = Integer.parseInt(rd.readLine());
-            edges = new Edge[this.amount];
-            String line = rd.readLine();
-            while(line!=null){
-                String[] tmp = line.split(" ");
-                E[0] = Integer.parseInt(tmp[0]);    // src vertex
-                E[1] = Integer.parseInt(tmp[1]);    // des vertex
-                E[2] = Integer.parseInt(tmp[2]);    // weight
-                Edge e = new Edge(E[0],E[1],E[2]);
-                edges[index] = e;
-                line = rd.readLine();
-                index++;
+            BufferedReader rd;
+            try {
+                rd = new BufferedReader(new FileReader(filename));
+                this.V = Integer.parseInt(rd.readLine());
+                this.amount = Integer.parseInt(rd.readLine());
+                edges = new Edge[this.amount];
+                String line = rd.readLine();
+                while (line != null) {
+                    String[] mc = new String[3];
+                    String[] tmp = line.split("\\ +");
+                    if (tmp.length > 3) {
+                        System.arraycopy(tmp, 1, mc, 0, mc.length);
+                    } else {
+                        mc = tmp;
+                    }
+                    int src = Integer.parseInt(mc[0]);    // src vertex
+                    int des = Integer.parseInt(mc[1]);    // des vertex
+                    double weight = Double.parseDouble(mc[2]);    // weight
+                    Edge e = new Edge(src, des, weight);
+                    edges[index] = e;
+                    line = rd.readLine();
+                    index++;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        this.edges = edges;
+            this.edges = edges;
+            //for(int k =0; k<this.V; k++){
+            double[] ans = runDijkstra(0);
+            for (int i = 0; i < ans.length; i++) {
+                System.out.println(i + ". " + ans[i]);
+            }
+//            System.out.print("\n");
+            //}
+            System.out.print(timeRequiredforCompetition());
+       // }
     }
 
 
@@ -74,57 +87,71 @@ public class CompetitionDijkstra {
      * @return int: minimum minutes that will pass before the three contestants can meet
      */
     public int timeRequiredforCompetition(){
-
-        //TO DO
-        return -1;
+        int slowest = Math.min(Math.min(sA,sB),sC);
+        int fastest = Math.max(Math.max(sA,sB),sC);
+        if(edges==null || slowest<50 || fastest>100){
+            return -1;
+        }
+        double maxDistance = getLongestDistance();
+        if(maxDistance<0) return -1;
+        return (int) Math.ceil((maxDistance*KM_TO_M)/slowest);
     }
 
-    public int[] getShortestPath(int srcV){
-        isValidVertex(srcV);
-        int[] distanceTo = new int[this.V];
+    public double getLongestDistance(){
+        double longest = Double.MIN_VALUE;
+        for(int i=0; i<V; i++){
+            double[] dist = runDijkstra(i);
+            for(int j=0; j<V; j++){
+                if(i==j) continue;
+                if(dist[j]>longest){
+                    longest = dist[j];
+                }
+                if(longest==Double.MAX_VALUE){
+                    return -1;
+                }
+            }
+        }
+        return longest;
+    }
+
+    public double[] runDijkstra(int srcV){
+        double[] distanceTo = new double[this.V];
         for(int i=0; i<distanceTo.length; i++) distanceTo[i] = Integer.MAX_VALUE;
 
-        PriorityQueue<Vertex> pq = new PriorityQueue<>(this.V, new Vertex());
-        Set<Vertex> isVisited = new HashSet<>();
+        MinPriorityQueue pq = new MinPriorityQueue(this.V);
 
         distanceTo[srcV] = 0;
-        pq.add(new Vertex(srcV,0));
+        pq.put(srcV,0.0);
         while(!pq.isEmpty()){
-            Vertex tmp = pq.remove();
-            ArrayList<Vertex> adjVertices = getAdjacent(tmp);
-            isVisited.add(tmp);
-            released(tmp, adjVertices, isVisited, distanceTo, pq);
+            int tmp = pq.removeMin();
+            ArrayList<Edge> adjacent = getAdjacent(tmp);
+            released(tmp, adjacent, distanceTo, pq);
         }
 
         return distanceTo;
     }
 
-    public void released(Vertex cur, ArrayList<Vertex> adjVertices, Set<Vertex> isVisited, int[] distanceTo, PriorityQueue<Vertex> pq){
-        int edgeCost = -1;
-        int newCost = -1;
-        for(Vertex v : adjVertices){
-            if(!isVisited.contains(v)){
-                edgeCost = v.cost;
-                newCost = distanceTo[cur.vertex] + edgeCost;
-                if(newCost<distanceTo[v.vertex]){
-                    distanceTo[v.vertex] = newCost;
+    public void released(int cur, ArrayList<Edge> adjacent, double[] distanceTo, MinPriorityQueue pq){
+        for(Edge e : adjacent){
+            int src = e.src();
+            int des = e.des();
+            if(distanceTo[des]>distanceTo[src]+e.getWeight()){
+                distanceTo[des] = distanceTo[src]+e.getWeight();
+                if(pq.contains(des)){
+                    pq.decreaseKey(des,distanceTo[des]);
                 }
-                pq.add(new Vertex(v.vertex,distanceTo[v.vertex]));
+                else{
+                    pq.put(des,distanceTo[des]);
+                }
             }
         }
     }
 
-    public void isValidVertex(int vertex){
-        if(vertex<0 || vertex>=V){
-            throw new IllegalArgumentException("Vertex "+ vertex + "is outside the given range.");
-        }
-    }
-
-    public ArrayList<Vertex> getAdjacent(Vertex V){
-        ArrayList<Vertex> adjacent = new ArrayList<>();
+    public ArrayList<Edge> getAdjacent(int V){
+        ArrayList<Edge> adjacent = new ArrayList<>();
         for(Edge e : this.edges){
-            if(e.hasVertex(V.vertex)){
-                adjacent.add(new Vertex(e.other(V.vertex),e.getWeight()));
+            if(e.isSrc(V)){
+                adjacent.add(e);
             }
         }
         return adjacent;
