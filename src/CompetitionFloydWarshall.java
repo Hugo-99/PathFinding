@@ -81,9 +81,10 @@ public class CompetitionFloydWarshall {
         } catch (IOException e){
             e.printStackTrace();
         }
+
         this.dist = dist;
         runFW();
-        printFW();
+        //printFW();
         System.out.print(timeRequiredforCompetition());
     }
 
@@ -103,7 +104,7 @@ public class CompetitionFloydWarshall {
     }
 
     public double getLongestDistance(){
-        double longest = Double.MIN_VALUE;
+        double longest = -1;
         for(int i=0; i<V; i++){
             for(int j=0; j<V; j++){
                 if(i==j) continue;

@@ -71,15 +71,15 @@ public class CompetitionDijkstra {
                 e.printStackTrace();
             }
             this.edges = edges;
-            //for(int k =0; k<this.V; k++){
-            double[] ans = runDijkstra(0);
-            for (int i = 0; i < ans.length; i++) {
-                System.out.println(i + ". " + ans[i]);
-            }
-//            System.out.print("\n");
-            //}
-            System.out.print(timeRequiredforCompetition());
-       // }
+//            for(int i=0; i<V; i++){
+//                double[] paths = runDijkstra(i);
+//                for(int j=0; j<V; j++){
+//                    System.out.print(paths[j]+" ");
+//                }
+//                System.out.print("\n");
+//            }
+            int ans = timeRequiredforCompetition();
+            System.out.print(ans);
     }
 
 
@@ -98,7 +98,7 @@ public class CompetitionDijkstra {
     }
 
     public double getLongestDistance(){
-        double longest = Double.MIN_VALUE;
+        double longest = -1;
         for(int i=0; i<V; i++){
             double[] dist = runDijkstra(i);
             for(int j=0; j<V; j++){
@@ -116,7 +116,7 @@ public class CompetitionDijkstra {
 
     public double[] runDijkstra(int srcV){
         double[] distanceTo = new double[this.V];
-        for(int i=0; i<distanceTo.length; i++) distanceTo[i] = Integer.MAX_VALUE;
+        for(int i=0; i<distanceTo.length; i++) distanceTo[i] = Double.MAX_VALUE;
 
         MinPriorityQueue pq = new MinPriorityQueue(this.V);
 

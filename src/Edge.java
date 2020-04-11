@@ -29,12 +29,4 @@ public class Edge {
         return false;
     }
 
-    public int other(int V){
-        if(this.src == V){
-            return this.des;
-        }
-        else {
-            return this.src;
-        }
-    }
 }
