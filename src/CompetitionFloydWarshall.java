@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-
 public class CompetitionFloydWarshall {
 
     public static final double KM_TO_M = 1000;
@@ -84,8 +83,6 @@ public class CompetitionFloydWarshall {
 
         this.dist = dist;
         runFW();
-        //printFW();
-        System.out.print(timeRequiredforCompetition());
     }
 
 
@@ -128,21 +125,6 @@ public class CompetitionFloydWarshall {
                     }
                 }
             }
-        }
-    }
-
-    public void printFW(){
-        for(int i=0; i<this.V; i++){
-            for(int j=0; j<this.V; j++){
-                double tmp = this.dist[i][j];
-                if(tmp==Double.MAX_VALUE){
-                    System.out.print("inf ");
-                }
-                else{
-                    System.out.print( tmp +"  ");
-                }
-            }
-            System.out.print("\n");
         }
     }
 }

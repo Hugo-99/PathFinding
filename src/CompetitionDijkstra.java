@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /*
  * A Contest to Meet (ACM) is a reality TV contest that sets three contestants at three random
@@ -36,7 +37,6 @@ public class CompetitionDijkstra {
     public static final double KM_TO_M = 1000;
 
     CompetitionDijkstra (String filename, int sA, int sB, int sC){
-        //if(sA>=50 && sB>=50 && sC>=50 && sA<=100 && sB<=100 && sC<=100 ) {
             this.sA = sA;
             this.sB = sB;
             this.sC = sC;
@@ -44,6 +44,7 @@ public class CompetitionDijkstra {
             Edge[] edges = null;
             int index = 0;
 
+            Scanner sc;
             BufferedReader rd;
             try {
                 rd = new BufferedReader(new FileReader(filename));
@@ -71,15 +72,6 @@ public class CompetitionDijkstra {
                 e.printStackTrace();
             }
             this.edges = edges;
-//            for(int i=0; i<V; i++){
-//                double[] paths = runDijkstra(i);
-//                for(int j=0; j<V; j++){
-//                    System.out.print(paths[j]+" ");
-//                }
-//                System.out.print("\n");
-//            }
-            int ans = timeRequiredforCompetition();
-            System.out.print(ans);
     }
 
 
@@ -125,13 +117,13 @@ public class CompetitionDijkstra {
         while(!pq.isEmpty()){
             int tmp = pq.removeMin();
             ArrayList<Edge> adjacent = getAdjacent(tmp);
-            released(tmp, adjacent, distanceTo, pq);
+            released(adjacent, distanceTo, pq);
         }
 
         return distanceTo;
     }
 
-    public void released(int cur, ArrayList<Edge> adjacent, double[] distanceTo, MinPriorityQueue pq){
+    public void released(ArrayList<Edge> adjacent, double[] distanceTo, MinPriorityQueue pq){
         for(Edge e : adjacent){
             int src = e.src();
             int des = e.des();

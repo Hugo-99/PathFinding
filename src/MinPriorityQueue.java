@@ -2,8 +2,7 @@ public class MinPriorityQueue {
 
     private int[] vertices;
     private double[] dist;
-    private int[] index;
-    private int maxSize;
+    private int[] index;    // index start from 1
     private int n;
 
     MinPriorityQueue(int size){
@@ -11,7 +10,6 @@ public class MinPriorityQueue {
             this.vertices = new int[size+1];
             this.dist = new double[size+1];
             this.index = new int[size+1];
-            this.maxSize = size;
             this.n = 0;
             for(int i=0; i<size; i++){
                 this.index[i] = -1;
@@ -23,22 +21,13 @@ public class MinPriorityQueue {
         return n==0;
     }
 
-    public int size(){
-        return n;
-    }
-
     public boolean contains(int vertex){
         return index[vertex]!=-1;
     }
 
     public void decreaseKey(int vertex, double cost){
-        if(!contains(vertex)){
-            System.out.println("this vertex is no in the list");
-        }
-        else{
-            dist[vertex] = cost;
-            swim(index[vertex]);
-        }
+        dist[vertex] = cost;
+        swim(index[vertex]);
     }
 
     public int removeMin(){
@@ -53,10 +42,6 @@ public class MinPriorityQueue {
     }
 
     public void put(int vertex, double cost){
-        if(contains(vertex)){
-            System.out.print("this vertex is already existed in the list");
-            return;
-        }
         n++;
         index[vertex] = n;
         vertices[n] = vertex;
@@ -65,12 +50,6 @@ public class MinPriorityQueue {
     }
 
     private void swap(int a, int b){
-//        int tmpV = vertices[a];
-//        double tmpD = dist[a];
-//        vertices[a] = vertices[b];
-//        dist[a] = this.dist[b];
-//        vertices[b] = tmpV;
-//        dist[b] = tmpD;
         int tmp = vertices[a];
         vertices[a] = vertices[b];
         vertices[b] = tmp;

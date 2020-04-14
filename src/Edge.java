@@ -5,9 +5,9 @@ public class Edge {
     private double weight;
 
     Edge(int src, int des, double weight){
-        this.src = src;
-        this.des = des;
-        this.weight = weight;
+        this.src = src;     // source vertex
+        this.des = des;     // destination vertex
+        this.weight = weight;   // edge weight
     }
 
     public int src() {
