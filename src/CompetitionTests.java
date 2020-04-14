@@ -28,6 +28,11 @@ public class CompetitionTests {
         int output = dijkstra.timeRequiredforCompetition();
         assertEquals("The time required for competition with normal speed:",160,output);
 
+        file = "input-E.txt";
+        dijkstra = new CompetitionDijkstra(file,50,60,70);
+        output = dijkstra.timeRequiredforCompetition();
+        assertEquals("The time required for competition with normal speed:",28,output);
+
         dijkstra = new CompetitionDijkstra(file,1,1,1);
         output = dijkstra.timeRequiredforCompetition();
         assertEquals("The time required for competition with speed below 50:",-1,output);
@@ -35,6 +40,11 @@ public class CompetitionTests {
         dijkstra = new CompetitionDijkstra(file,200,200,200);
         output = dijkstra.timeRequiredforCompetition();
         assertEquals("The time required for competition with speed above 100:",-1,output);
+
+        file = null;
+        dijkstra = new CompetitionDijkstra(file,50,50,50);
+        output = dijkstra.timeRequiredforCompetition();
+        assertEquals("The time required for competition for filename with null",-1,output);
     }
 
     @Test
@@ -44,6 +54,11 @@ public class CompetitionTests {
         int output = fw.timeRequiredforCompetition();
         assertEquals("The time required for competition:",160,output);
 
+        file = "input-E.txt";
+        fw = new CompetitionFloydWarshall(file,50,60,70);
+        output = fw.timeRequiredforCompetition();
+        assertEquals("The time required for competition with normal speed:",28,output);
+
         fw = new CompetitionFloydWarshall(file,1,1,1);
         output = fw.timeRequiredforCompetition();
         assertEquals("The time required for competition with speed below 50:",-1,output);
@@ -51,6 +66,11 @@ public class CompetitionTests {
         fw = new CompetitionFloydWarshall(file,200,200,200);
         output = fw.timeRequiredforCompetition();
         assertEquals("The time required for competition with speed above 100:",-1,output);
+
+        file = null;
+        fw = new CompetitionFloydWarshall(file,50,50,50);
+        output = fw.timeRequiredforCompetition();
+        assertEquals("The time required for competition for filename with null:",-1,output);
     }
 
 

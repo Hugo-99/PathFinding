@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /*
  * A Contest to Meet (ACM) is a reality TV contest that sets three contestants at three random
@@ -43,33 +42,35 @@ public class CompetitionDijkstra {
 
             Edge[] edges = null;
             int index = 0;
-
-            Scanner sc;
-            BufferedReader rd;
-            try {
-                rd = new BufferedReader(new FileReader(filename));
-                this.V = Integer.parseInt(rd.readLine());
-                this.amount = Integer.parseInt(rd.readLine());
-                edges = new Edge[this.amount];
-                String line = rd.readLine();
-                while (line != null) {
-                    String[] mc = new String[3];
-                    String[] tmp = line.split("\\ +");
-                    if (tmp.length > 3) {
-                        System.arraycopy(tmp, 1, mc, 0, mc.length);
-                    } else {
-                        mc = tmp;
+            if(filename!=null){
+                BufferedReader rd;
+                try {
+                    rd = new BufferedReader(new FileReader(filename));
+                    if(rd!=null){
+                        this.V = Integer.parseInt(rd.readLine());
+                        this.amount = Integer.parseInt(rd.readLine());
+                        edges = new Edge[this.amount];
+                        String line = rd.readLine();
+                        while (line != null) {
+                            String[] mc = new String[3];
+                            String[] tmp = line.split("\\ +");
+                            if (tmp.length > 3) {
+                                System.arraycopy(tmp, 1, mc, 0, mc.length);
+                            } else {
+                                mc = tmp;
+                            }
+                            int src = Integer.parseInt(mc[0]);    // src vertex
+                            int des = Integer.parseInt(mc[1]);    // des vertex
+                            double weight = Double.parseDouble(mc[2]);    // weight
+                            Edge e = new Edge(src, des, weight);
+                            edges[index] = e;
+                            line = rd.readLine();
+                            index++;
+                        }
                     }
-                    int src = Integer.parseInt(mc[0]);    // src vertex
-                    int des = Integer.parseInt(mc[1]);    // des vertex
-                    double weight = Double.parseDouble(mc[2]);    // weight
-                    Edge e = new Edge(src, des, weight);
-                    edges[index] = e;
-                    line = rd.readLine();
-                    index++;
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             this.edges = edges;
     }

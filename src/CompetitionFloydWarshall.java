@@ -43,44 +43,47 @@ public class CompetitionFloydWarshall {
 
         double[][] dist = null;
 
-        BufferedReader rd;
-        try{
-            rd = new BufferedReader(new FileReader(filename));
-            this.V = Integer.parseInt(rd.readLine());
-            this.amount = Integer.parseInt(rd.readLine());
+        if(filename!=null){
+            BufferedReader rd;
+            try{
+                rd = new BufferedReader(new FileReader(filename));
+                if(rd!=null){
+                    this.V = Integer.parseInt(rd.readLine());
+                    this.amount = Integer.parseInt(rd.readLine());
 
-            // initialise the distance 2D array
-            dist = new double[this.V][this.V];
-            for(int i=0; i<this.V; i++){
-                for(int j=0; j<this.V; j++){
-                    if(i==j){
-                        dist[i][j] = 0;
+                    // initialise the distance 2D array
+                    dist = new double[this.V][this.V];
+                    for(int i=0; i<this.V; i++){
+                        for(int j=0; j<this.V; j++){
+                            if(i==j){
+                                dist[i][j] = 0;
+                            }
+                            else{
+                                dist[i][j] = Double.MAX_VALUE;
+                            }
+                        }
                     }
-                    else{
-                        dist[i][j] = Double.MAX_VALUE;
-                    }
-                }
-            }
 
-            String line = rd.readLine();
-            while(line!=null){
-                String[] mc = new String[3];
-                String[] tmp = line.split("\\ +");
-                if(tmp.length>3){
-                    System.arraycopy(tmp,1,mc,0,mc.length);
+                    String line = rd.readLine();
+                    while(line!=null){
+                        String[] mc = new String[3];
+                        String[] tmp = line.split("\\ +");
+                        if(tmp.length>3){
+                            System.arraycopy(tmp,1,mc,0,mc.length);
+                        }
+                        else{
+                            mc = tmp;
+                        }
+                        int src = Integer.parseInt(mc[0]);    // src vertex
+                        int des = Integer.parseInt(mc[1]);    // des vertex
+                        dist[src][des] = Double.parseDouble(mc[2]);    // weight
+                        line = rd.readLine();
+                    }
                 }
-                else{
-                    mc = tmp;
-                }
-                int src = Integer.parseInt(mc[0]);    // src vertex
-                int des = Integer.parseInt(mc[1]);    // des vertex
-                dist[src][des] = Double.parseDouble(mc[2]);    // weight
-                line = rd.readLine();
+            } catch (IOException e){
+                e.printStackTrace();
             }
-        } catch (IOException e){
-            e.printStackTrace();
         }
-
         this.dist = dist;
         runFW();
     }
